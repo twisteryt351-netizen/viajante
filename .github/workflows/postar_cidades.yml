@@ -10,17 +10,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install requests groq google-api-python-client google-auth-oauthlib google-auth
-      - run: python cidades_curiosidades.py
+
+      - name: Instalar dependencias
+        run: pip install requests groq google-api-python-client google-auth-oauthlib google-auth
+
+      - name: Executar script de cidades
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          BLOGGER_ID_CIDADES: ${{ secrets.BLOGGER_ID_CIDADES }}
+          BLOGGER_ID: ${{ secrets.BLOGGER_ID }}
           BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
           BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
           BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
+        run: python cidades_curiosidades.py
+
       - name: Salvar historico de cidades
         run: |
           git config user.name "Robo de Cidades"
