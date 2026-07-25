@@ -169,7 +169,8 @@ DIRETRIZES OBRIGATÓRIAS DE REDAÇÃO:
 2. ESTILO NARRATIVO: Use um vocabulário rico, envolvente e imersivo. Descreva a atmosfera, as luzes, os cheiros e as sensações visuais com maestria.
 3. SUBTÍTULOS IMAGINATIVOS: NUNCA use subtítulos genéricos como "O que torna especial", "Como é a experiência", "Curiosidades" ou "Dicas práticas". Crie subtítulos <h2> poéticos, intrigantes e dramáticos que pareçam títulos de capítulos de livro.
 4. COMENTÁRIOS PESSOAIS BEM-HUMORADOS: Inclua de 2 a 3 parágrafos curtos no estilo de pensamento bem-humorado em primeira pessoa ("Sabe o que eu acho?...", "Olha, sinceramente...", "Pega essa:...") para quebrar a solenidade e criar conexão com o leitor.
-5. TAMANHO E DENSIDADE: O artigo deve ter entre 900 e 1300 palavras, sendo muito bem desenvolvido, denso e repleto de detalhes ricos.
+5. TAMANHO E DENSIDADE: O artigo deve ter entre 1200 e 2800 palavras, sendo muito bem desenvolvido, denso e repleto de detalhes ricos, caso não tiver muito oque falar, procure noticias e fatos históricos coerentes para preencher o texto lembre-se que você é um guia e contrutor de uma comunidade online, não lhe pode faltar contéudo!
+6.Cide fontes das pesquisas!
 
 REGRAS DE FORMATO (Retorne APENAS HTML puro, sem Markdown e sem tags ```html):
 - Subtítulos em tags <h2>.
