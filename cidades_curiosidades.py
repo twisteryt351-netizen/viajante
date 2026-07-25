@@ -27,7 +27,7 @@ for nome, valor in [
 groq_client = Groq(api_key=GROQ_API_KEY)
 MODELO_IA = "llama-3.3-70b-versatile"
 
-# --- RODÍZIO DE CIDADES DO MUNDO (uma por dia) ---
+# --- RODÍZIO DE CIDADES DO MUNDO ---
 CIDADES = [
     # --- BRASIL ---
     "Rio de Janeiro, Brasil", "São Paulo, Brasil", "Salvador, Brasil", "Ouro Preto, Brasil", "Manaus, Brasil",
@@ -86,13 +86,13 @@ def marcar_cidade_usada(cidade):
         f.write(cidade + "\n")
 
 
-IMAGEM_PADRAO = "[https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/News_icon.svg/640px-News_icon.svg.png](https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/News_icon.svg/640px-News_icon.svg.png)"
+IMAGEM_PADRAO = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1000&auto=format&fit=crop"
 
 
 def buscar_imagem_openverse(palavra_chave):
     try:
         resposta = requests.get(
-            "[https://api.openverse.org/v1/images/](https://api.openverse.org/v1/images/)",
+            "https://api.openverse.org/v1/images/",
             params={
                 "q": palavra_chave,
                 "license_type": "commercial",
@@ -112,10 +112,10 @@ def buscar_imagem_openverse(palavra_chave):
 def gerar_tabela_imagem_blogger(url_img, alt_title):
     return (
         '<table align="center" cellpadding="0" cellspacing="0" '
-        'class="tr-caption-container" style="margin-left: auto; margin-right: auto;">'
+        'class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;">'
         '<tbody><tr><td style="text-align: center;">'
-        f'<img alt="{alt_title}" border="0" height="360" src="{url_img}" '
-        f'title="{alt_title}" width="640" /></td></tr></tbody></table><br />'
+        f'<img alt="{alt_title}" border="0" style="max-width: 100%; height: auto; border-radius: 8px;" src="{url_img}" '
+        f'title="{alt_title}" /></td></tr></tbody></table><br />'
     )
 
 
@@ -140,68 +140,70 @@ def pedir_ia_groq(prompt, temperatura=0.7):
 
 def gerar_esqueleto(cidade):
     prompt = f"""
-Voce e um redator de viagens especializado em encontrar cantos curiosos e pouco conhecidos de grandes cidades.
+Você é um historiador, jornalista e autor de guias de viagem fascinado pelo incomum e pelo mistério urbano.
 
 Cidade de hoje: {cidade}
 
-Escolha UM lugar, historia ou curiosidade REAL, especifica e pouco conhecida dessa cidade (um museu incomum, um bairro secreto, uma lenda urbana, uma curiosidade arquitetonica, um fato historico bizarro) - algo que voce tenha confianca real de que existe, sem inventar nomes ou fatos.
+Escolha UM lugar, monumento, museu incomum, passagem histórica oculta ou lenda fascinante REAL dessa cidade. Deve ser algo com personalidade, mistério ou grande valor cultural e arquitetônico.
 
-Monte um ESQUELETO com:
-- O nome exato do lugar/curiosidade escolhido.
-- 5 a 6 topicos que o artigo vai cobrir (contexto/historia, o que torna especial, curiosidades, como e a experiencia de visitar, dicas praticas gerais).
-- 1-2 frases resumindo cada topico, sem repetir informacao entre eles.
+Monte um roteiro denso com:
+1. O local/história exata escolhida.
+2. A atmosfera e o mistério por trás do lugar.
+3. 4 a 5 aspectos detalhados que valem a pena explorar sobre ele (arquitetura, segredos, coleções, impacto no visitante, lendas).
 
-Responda so o esqueleto, texto simples.
+Responda em texto simples e direto.
 """
     return pedir_ia_groq(prompt, temperatura=0.6)
 
 
 def gerar_artigo_completo(esqueleto, cidade):
     prompt = f"""
-Voce e um redator de viagens premiado, escrevendo para um blog de curiosidades urbanas do mundo todo. Escreva com capricho, sem pressa.
+Você é um renomado colunista de viagens e cultura, com um estilo literário denso, envolvente, poético e levemente irônico/bem-humorado (no estilo da revista Piauí ou National Geographic).
 
 Cidade: {cidade}
-Esqueleto obrigatorio a seguir (desenvolva cada topico em profundidade, sem repetir):
+Tema base:
 {esqueleto}
 
-REGRAS DE CONTEUDO E PRECISAO:
-- Baseie-se em fatos reais e conhecidos. NAO invente numeros de endereco, horarios de funcionamento especificos, precos de ingresso ou dados que podem estar desatualizados - para esse tipo de informacao pratica, oriente o leitor a confirmar no site oficial do local antes de visitar, em vez de fabricar um dado especifico.
-- PROIBIDO repetir a mesma ideia com palavras diferentes.
-- Tamanho: entre 900 e 1400 palavras, bem escrito e envolvente.
+DIRETRIZES OBRIGATÓRIAS DE REDAÇÃO:
+1. IDIOMA E ACENTUAÇÃO: Escreva em Português do Brasil com ACENTUAÇÃO RIGOROSA E PERFEITA (use acentos agudos, circunflexos, tiis, crases corretamente em todas as palavras).
+2. ESTILO NARRATIVO: Use um vocabulário rico, envolvente e imersivo. Descreva a atmosfera, as luzes, os cheiros e as sensações visuais com maestria.
+3. SUBTÍTULOS IMAGINATIVOS: NUNCA use subtítulos genéricos como "O que torna especial", "Como é a experiência", "Curiosidades" ou "Dicas práticas". Crie subtítulos <h2> poéticos, intrigantes e dramáticos que pareçam títulos de capítulos de livro.
+4. COMENTÁRIOS PESSOAIS BEM-HUMORADOS: Inclua de 2 a 3 parágrafos curtos no estilo de pensamento bem-humorado em primeira pessoa ("Sabe o que eu acho?...", "Olha, sinceramente...", "Pega essa:...") para quebrar a solenidade e criar conexão com o leitor.
+5. TAMANHO E DENSIDADE: O artigo deve ter entre 900 e 1300 palavras, sendo muito bem desenvolvido, denso e repleto de detalhes ricos.
 
-REGRAS DE FORMATO (HTML puro, sem Markdown):
-1. Paragrafo de abertura instigante.
-2. Cada topico do esqueleto vira um subtitulo <h2> proprio.
-3. Inclua 2 notas do autor leves e engracadas, cada uma dentro de <blockquote>.
-4. Nao inclua links no corpo do texto.
-5. Termine com um paragrafo convidando o leitor a comentar se ja foi nessa cidade ou conhece esse lugar, e a compartilhar com quem ama viajar.
+REGRAS DE FORMATO (Retorne APENAS HTML puro, sem Markdown e sem tags ```html):
+- Subtítulos em tags <h2>.
+- Parágrafos bem estruturados em tags <p>.
+- Destaques de reflexões soltas ou frases de impacto estilizadas em <blockquote>.
+- Palavras e conceitos chave destacados com <b>.
 """
-    return pedir_ia_groq(prompt, temperatura=0.75)
+    return pedir_ia_groq(prompt, temperatura=0.7)
 
 
 def gerar_titulo(esqueleto, cidade):
     prompt = (
-        f"Baseado neste esqueleto sobre {cidade}:\n{esqueleto}\n\n"
-        f"Crie um titulo de blog chamativo, otimizado para SEO, em portugues do Brasil, "
-        f"sem aspas. Responda apenas o titulo."
+        f"Baseado neste tema sobre {cidade}:\n{esqueleto}\n\n"
+        f"Crie um título longo, fascinante, magnético e poético para um artigo de blog, no estilo: "
+        f"'[Nome do Local] em [Cidade]: Arte, Segredos e o Enigma [Adjetivo] no Coração de [Bairro] que Desafia a Razão'. "
+        f"Responda apenas o título, em português do Brasil com acentuação perfeita, sem aspas."
     )
     return pedir_ia_groq(prompt, temperatura=0.7).replace('"', '').strip()
 
 
 def extrair_palavra_chave(cidade, esqueleto):
     prompt = (
-        f"Baseado nesta cidade ({cidade}) e neste esqueleto de artigo:\n{esqueleto}\n\n"
-        f"De apenas UMA palavra-chave em ingles para buscar uma foto relacionada "
-        f"(ex: 'paris street', 'tokyo temple', 'rio de janeiro'). Responda so a palavra ou frase curta."
+        f"Cidade: {cidade}\nTema: {esqueleto}\n\n"
+        f"Responda apenas 2 palavras em inglês para buscar uma foto bonita e representativa no banco de imagens (exemplo: 'paris museum', 'rio architecture')."
     )
     return pedir_ia_groq(prompt, temperatura=0.3).strip().lower()
 
 
 def gerar_cta():
     return """
+<hr style="border: 0; height: 1px; background: #eee; margin: 30px 0;" />
 <div style="background-color: #f4f6f8; border-radius: 12px; margin: 30px 0; padding: 25px; text-align: center; font-family: sans-serif;">
-    <p style="font-size: 17px; font-weight: bold; color: #333; margin: 0 0 10px 0;">Ja conhecia esse lugar?</p>
-    <p style="font-size: 14px; color: #555; margin: 0 0 15px 0;">Curta, comenta contando se ja foi ou se colocou na lista, e compartilha com quem ama viajar!</p>
+    <p style="font-size: 17px; font-weight: bold; color: #333; margin: 0 0 10px 0;">Já conhecia esse lugar?</p>
+    <p style="font-size: 14px; color: #555; margin: 0 0 15px 0;">Curta, comente contando se já foi ou se colocou na lista, e compartilhe com quem ama viajar!</p>
     <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
         <a href="#" onclick="window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(document.title + ' - ' + window.location.href), '_blank'); return false;" style="background-color: #25d366; color: white; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold;">WhatsApp</a>
         <a href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank'); return false;" style="background-color: #1877f2; color: white; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold;">Facebook</a>
@@ -233,16 +235,16 @@ def publicar_no_blogger(titulo, conteudo, tags):
         'labels': tags,
     }
     resultado = blogger.posts().insert(blogId=BLOGGER_ID, body=corpo_postagem).execute()
-    print(f"Postado: '{titulo}' -> {resultado.get('url')}")
+    print(f"Postado com sucesso: '{titulo}' -> {resultado.get('url')}")
 
 
 if __name__ == "__main__":
-    print("Gerando curiosidade de cidade do dia...")
+    print("Iniciando geração de artigo de altíssima qualidade...")
     cidade = proxima_cidade()
-    print(f"Cidade de hoje: {cidade}")
+    print(f"Cidade selecionada: {cidade}")
 
     esqueleto = gerar_esqueleto(cidade)
-    print("Esqueleto gerado, escrevendo artigo completo...")
+    print("Elaborando tema denso e envolvente...")
 
     corpo = gerar_artigo_completo(esqueleto, cidade)
     titulo = gerar_titulo(esqueleto, cidade)
@@ -252,9 +254,8 @@ if __name__ == "__main__":
     cta = gerar_cta()
 
     aviso = (
-        '<p style="font-size: 12px; color: #888; font-style: italic;">Informacoes de '
-        'horarios, precos e enderecos podem mudar - confirme sempre no site oficial do '
-        'local antes de planejar sua visita.</p>'
+        '<p style="font-size: 12px; color: #888; font-style: italic; margin-top: 20px;">'
+        'Informações de horários, preços e endereços podem mudar — confirme sempre no site oficial do local antes de planejar sua visita.</p>'
     )
 
     pais = cidade.split(",")[-1].strip() if "," in cidade else cidade
@@ -263,4 +264,4 @@ if __name__ == "__main__":
     html_final = f"{img_html}{corpo}{cta}{aviso}"
     publicar_no_blogger(titulo, html_final, tags)
     marcar_cidade_usada(cidade)
-    print("Concluido!")
+    print("Processo concluído com sucesso!")
