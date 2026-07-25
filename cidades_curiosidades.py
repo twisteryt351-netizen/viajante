@@ -8,7 +8,7 @@ from google.auth.transport.requests import Request
 
 # --- CONFIGURACOES ---
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-BLOGGER_ID = os.environ.get("BLOGGER_ID_CIDADES")
+BLOGGER_ID = os.environ.get("BLOGGER_ID")
 CLIENT_ID = os.environ.get("BLOGGER_CLIENT_ID")
 CLIENT_SECRET = os.environ.get("BLOGGER_CLIENT_SECRET")
 REFRESH_TOKEN = os.environ.get("BLOGGER_REFRESH_TOKEN")
