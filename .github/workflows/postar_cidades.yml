@@ -5,6 +5,9 @@ on:
     - cron: '0 13 * * *'   # 13:00 UTC = 10:00 em Brasilia
   workflow_dispatch:
 
+permissions:
+  contents: write   # sem isso o GITHUB_TOKEN padrao pode ser somente-leitura e o "git push" falha em silencio
+
 jobs:
   postar:
     runs-on: ubuntu-latest
@@ -25,6 +28,8 @@ jobs:
           BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
           BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
           BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
+          POLLINATIONS_TOKEN: ${{ secrets.POLLINATIONS_TOKEN }}  # opcional
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
         run: python cidades_curiosidades.py
 
       - name: Salvar historico de cidades
@@ -32,5 +37,5 @@ jobs:
           git config user.name "Robo de Cidades"
           git config user.email "robo@exemplo.com"
           git add historico_cidades.txt || true
-          git commit -m "Atualiza historico" || true
-          git push || true
+          git commit -m "Atualiza historico" || echo "Nada novo para commitar."
+          git push || (echo "::error::git push falhou - o historico NAO foi salvo, a proxima cidade pode repetir. Confira as permissoes do GITHUB_TOKEN (contents: write)." && exit 1)
